@@ -26,7 +26,6 @@ def rewrite():
         return jsonify({"error": "Du skal vælge en stil."}), 400
 
     result = rewrite_text(text, tone)
-
     return jsonify({"result": result})
 
 
