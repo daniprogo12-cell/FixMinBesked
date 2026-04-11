@@ -4,6 +4,7 @@ const copyBtn = document.getElementById("copyBtn");
 const messageInput = document.getElementById("message");
 const outputBox = document.getElementById("output");
 const statusMessage = document.getElementById("statusMessage");
+const loader = document.getElementById("loader");
 
 let selectedTone = "";
 
@@ -43,6 +44,7 @@ rewriteBtn.addEventListener("click", async () => {
     }
 
     setLoadingState(true);
+    loader.classList.remove("hidden");
     setStatus("Forbedrer din besked...", "");
 
     try {
@@ -69,6 +71,7 @@ rewriteBtn.addEventListener("click", async () => {
         setStatus(error.message || "Noget gik galt.", "error");
     } finally {
         setLoadingState(false);
+        loader.classList.add("hidden");
     }
 });
 

@@ -140,21 +140,22 @@ textarea:focus {
 .tone-buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
 }
 
 .tone-btn {
-    border: 1px solid rgba(107, 77, 248, 0.16);
-    background: rgba(255, 255, 255, 0.88);
-    color: #3a3156;
+    border: 1px solid rgba(109, 77, 255, 0.18);
+    background: rgba(255, 255, 255, 0.9);
+    color: #3a2f57;
     border-radius: 999px;
-    padding: 11px 18px;
-    font: inherit;
-    font-size: 0.95rem;
-    font-weight: 500;
+    padding: 10px 16px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.75) inset;
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    /* FIX */
+    white-space: nowrap;
+    max-width: 100%;
 }
 
 .tone-btn:hover {
@@ -295,5 +296,32 @@ textarea:focus {
 
     .copy-btn {
         width: 100%;
+    }
+
+    
+}
+
+/* LOADER */
+.loader {
+    margin: 20px auto 0;
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(109, 77, 255, 0.18);
+    border-top: 4px solid #6d4dff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: block;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }
