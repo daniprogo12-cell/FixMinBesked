@@ -193,5 +193,65 @@
     "event_type": "rewrite",
     "button": "Afvisning",
     "timestamp": "2026-04-12T10:41:48.123899Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Afvisning",
+    "timestamp": "2026-04-12T10:47:57.099040Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Rykker",
+    "timestamp": "2026-04-12T10:48:05.257586Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Kollega",
+    "timestamp": "2026-04-12T10:48:10.702902Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Chef",
+    "timestamp": "2026-04-12T10:48:14.495114Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Venlig",
+    "timestamp": "2026-04-12T10:48:16.530479Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Kortere",
+    "timestamp": "2026-04-12T10:48:18.164813Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Kortere",
+    "timestamp": "2026-04-12T10:48:25.162368Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Chef",
+    "timestamp": "2026-04-12T10:48:28.837238Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Professionel",
+    "timestamp": "2026-04-12T10:48:32.697094Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Kortere",
+    "timestamp": "2026-04-12T10:48:37.353805Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Kortere",
+    "timestamp": "2026-04-12T10:48:43.297229Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Kollega",
+    "timestamp": "2026-04-12T10:48:45.531118Z"
   }
 ]
