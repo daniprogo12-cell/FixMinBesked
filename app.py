@@ -10,7 +10,10 @@ load_dotenv()
 
 app = Flask(__name__)
 
-ANALYTICS_FILE = "analytics.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ANALYTICS_FILE = os.path.join(BASE_DIR, "analytics.json")
+DASHBOARD_KEY = os.getenv("DASHBOARD_KEY")
+
 analytics_lock = Lock()
 
 
@@ -58,9 +61,10 @@ def index():
 
 @app.route("/dashboard")
 def dashboard():
-    if request.args.get("key") != "hemmelig123":
+    if request.args.get("key") != DASHBOARD_KEY:
         return "Unauthorized", 403
-    return render_template("dashboard.html")
+
+    return render_template("dashboard.html", dashboard_key=DASHBOARD_KEY)
 
 
 @app.route("/rewrite", methods=["POST"])
@@ -76,11 +80,12 @@ def rewrite():
     if not tone:
         return jsonify({"error": "Du skal vælge en stil."}), 400
 
-    result = rewrite_text(text, tone)
-
-    log_event("rewrite", tone)
-
-    return jsonify({"result": result})
+    try:
+        result = rewrite_text(text, tone)
+        log_event("rewrite", tone)
+        return jsonify({"result": result})
+    except Exception:
+        return jsonify({"error": "Noget gik galt under omskrivningen."}), 500
 
 
 @app.route("/track-event", methods=["POST"])
@@ -94,12 +99,14 @@ def track_event():
         return jsonify({"error": "Manglende eventdata."}), 400
 
     log_event(event_type, button)
-
     return jsonify({"success": True})
 
 
 @app.route("/dashboard-data")
 def dashboard_data():
+    if request.args.get("key") != DASHBOARD_KEY:
+        return jsonify({"error": "Unauthorized"}), 403
+
     analytics = read_analytics()
     return jsonify({"events": analytics})
 

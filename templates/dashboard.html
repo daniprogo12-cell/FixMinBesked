@@ -290,7 +290,7 @@
 
         async function loadDashboardData() {
             try {
-                const response = await fetch("/dashboard-data");
+                const response = await fetch("/dashboard-data?key={{ dashboard_key }}");
                 const data = await response.json();
                 const events = data.events || [];
 
