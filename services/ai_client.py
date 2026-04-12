@@ -31,7 +31,7 @@ def rewrite_text(text: str, tone: str) -> str:
                 "content": prompt,
             },
         ],
-        temperature=0.2,
+        temperature=0.3,
     )
 
     return response.choices[0].message.content.strip()
