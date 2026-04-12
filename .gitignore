@@ -1,0 +1,26 @@
+# Environment
+.env
+
+# Analytics (lokal data)
+analytics.json
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# VS Code / editor
+.vscode/
+
+# OS filer
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Virtual environment (hvis du bruger det)
+venv/
+.venv/
+env/
