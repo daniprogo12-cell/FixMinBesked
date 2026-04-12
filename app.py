@@ -27,12 +27,12 @@ def ensure_analytics_file():
 def read_analytics():
     ensure_analytics_file()
 
-    with open(ANALYTICS_FILE, "r", encoding="utf-8") as f:
-        try:
+    try:
+        with open(ANALYTICS_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
             return data if isinstance(data, list) else []
-        except json.JSONDecodeError:
-            return []
+    except (json.JSONDecodeError, FileNotFoundError):
+        return []
 
 
 def write_analytics(data):
@@ -56,6 +56,10 @@ def log_event(event_type, button):
         write_analytics(analytics)
 
 
+# 🔥 VIGTIG: kør ved startup (også på Azure)
+ensure_analytics_file()
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -63,7 +67,7 @@ def index():
 
 @app.route("/dashboard")
 def dashboard():
-    if request.args.get("key") != DASHBOARD_KEY:
+    if not DASHBOARD_KEY or request.args.get("key") != DASHBOARD_KEY:
         return "Unauthorized", 403
 
     return render_template("dashboard.html", dashboard_key=DASHBOARD_KEY)
@@ -89,7 +93,8 @@ def rewrite():
         result = rewrite_text(text, tone)
         log_event("rewrite", tone)
         return jsonify({"result": result})
-    except Exception:
+    except Exception as e:
+        print("Rewrite error:", str(e))
         return jsonify({"error": "Noget gik galt under omskrivningen."}), 500
 
 
@@ -109,7 +114,7 @@ def track_event():
 
 @app.route("/dashboard-data")
 def dashboard_data():
-    if request.args.get("key") != DASHBOARD_KEY:
+    if not DASHBOARD_KEY or request.args.get("key") != DASHBOARD_KEY:
         return jsonify({"error": "Unauthorized"}), 403
 
     analytics = read_analytics()
@@ -117,5 +122,4 @@ def dashboard_data():
 
 
 if __name__ == "__main__":
-    ensure_analytics_file()
-    app.run(debug=True)
+    app.run()
