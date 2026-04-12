@@ -25,7 +25,7 @@ def rewrite_text(text: str, tone: str, system_prompt: str) -> str:
                 "content": text,
             },
         ],
-        temperature=0.3,
+        temperature=0.2,
         timeout=15,
         max_tokens=800,
     )

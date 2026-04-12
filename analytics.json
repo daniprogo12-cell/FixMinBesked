@@ -253,5 +253,10 @@
     "event_type": "rewrite",
     "button": "Kollega",
     "timestamp": "2026-04-12T10:48:45.531118Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Professionel",
+    "timestamp": "2026-04-12T14:21:09.720846Z"
   }
 ]

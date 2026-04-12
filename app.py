@@ -10,6 +10,7 @@ from threading import Lock
 load_dotenv()
 
 from services.ai_client import rewrite_text
+from utils.prompts import get_prompt
 
 app = Flask(__name__)
 
@@ -98,7 +99,7 @@ def rewrite():
         return jsonify({"error": "Beskeden er for lang. Hold dig under 2000 tegn."}), 400
 
     try:
-        result = rewrite_text(text, tone)
+        result = rewrite_text(text, tone, system_prompt=get_prompt(tone, text))
         log_event("rewrite", tone)
         return jsonify({"result": result})
     except Exception as e:
