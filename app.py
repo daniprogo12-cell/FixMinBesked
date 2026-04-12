@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, jsonify
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from dotenv import load_dotenv
 import os
 import json
@@ -10,6 +12,12 @@ load_dotenv()
 from services.ai_client import rewrite_text
 
 app = Flask(__name__)
+
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=[]
+)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ANALYTICS_FILE = os.path.join(BASE_DIR, "analytics.json")
@@ -56,7 +64,6 @@ def log_event(event_type, button):
         write_analytics(analytics)
 
 
-# 🔥 VIGTIG: kør ved startup (også på Azure)
 ensure_analytics_file()
 
 
@@ -74,6 +81,7 @@ def dashboard():
 
 
 @app.route("/rewrite", methods=["POST"])
+@limiter.limit("10 per minute")
 def rewrite():
     data = request.get_json(silent=True) or {}
 

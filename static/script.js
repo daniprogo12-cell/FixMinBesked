@@ -5,6 +5,8 @@ const messageInput = document.getElementById("message");
 const outputBox = document.getElementById("output");
 const statusMessage = document.getElementById("statusMessage");
 const loader = document.getElementById("loader");
+const MAX_CHARS = 2000;
+const charCounter = document.getElementById("charCounter");
 
 let selectedTone = "";
 
@@ -15,6 +17,12 @@ if (defaultActiveButton) {
     defaultActiveButton.classList.add("active");
     setStatus(`Valgt stil: ${selectedTone}`, "success");
 }
+
+messageInput.addEventListener("input", () => {
+    const remaining = MAX_CHARS - messageInput.value.length;
+    charCounter.textContent = `${remaining} tegn tilbage`;
+    charCounter.style.color = remaining < 100 ? "red" : "";
+});
 
 async function trackEvent(eventType, buttonName) {
     try {
@@ -52,7 +60,7 @@ rewriteBtn.addEventListener("click", async () => {
         return;
     }
 
-    if (text.length > 2000) {
+    if (text.length > MAX_CHARS) {
         setStatus("Beskeden er for lang. Hold dig under 2000 tegn.", "error");
         return;
     }
