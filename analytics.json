@@ -1,0 +1,77 @@
+[
+  {
+    "event_type": "rewrite",
+    "button": "Professionel",
+    "timestamp": "2026-04-12T08:33:42.181262Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Venlig",
+    "timestamp": "2026-04-12T08:33:46.688133Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Venlig",
+    "timestamp": "2026-04-12T08:33:52.053479Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Venlig",
+    "timestamp": "2026-04-12T08:33:55.362737Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Kortere",
+    "timestamp": "2026-04-12T08:33:59.541664Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Professionel",
+    "timestamp": "2026-04-12T08:34:14.483962Z"
+  },
+  {
+    "event_type": "copy",
+    "button": "Professionel",
+    "timestamp": "2026-04-12T08:34:15.624790Z"
+  },
+  {
+    "event_type": "copy",
+    "button": "Afvisning",
+    "timestamp": "2026-04-12T08:34:19.182845Z"
+  },
+  {
+    "event_type": "copy",
+    "button": "Afvisning",
+    "timestamp": "2026-04-12T08:34:21.525046Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Afvisning",
+    "timestamp": "2026-04-12T08:34:33.971701Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Afvisning",
+    "timestamp": "2026-04-12T08:40:15.194800Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Afvisning",
+    "timestamp": "2026-04-12T08:40:31.760857Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Afvisning",
+    "timestamp": "2026-04-12T08:40:43.973997Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Venlig",
+    "timestamp": "2026-04-12T08:55:07.368213Z"
+  },
+  {
+    "event_type": "copy",
+    "button": "Venlig",
+    "timestamp": "2026-04-12T08:55:08.176037Z"
+  }
+]

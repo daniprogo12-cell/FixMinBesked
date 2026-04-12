@@ -17,14 +17,32 @@ if (defaultActiveButton) {
     setStatus(`Valgt stil: ${selectedTone}`, "success");
 }
 
+async function trackEvent(eventType, buttonName) {
+    try {
+        await fetch("/track-event", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                event_type: eventType,
+                button: buttonName,
+            }),
+        });
+    } catch (error) {
+        console.error("Kunne ikke tracke event:", error);
+    }
+}
+
 // Klik på tone-knapper
 toneButtons.forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
         toneButtons.forEach((btn) => btn.classList.remove("active"));
         button.classList.add("active");
 
         selectedTone = button.dataset.tone;
         setStatus(`Valgt stil: ${selectedTone}`, "success");
+
     });
 });
 
@@ -87,6 +105,10 @@ copyBtn.addEventListener("click", async () => {
     try {
         await navigator.clipboard.writeText(text);
         setStatus("Teksten er kopieret.", "success");
+
+        if (selectedTone) {
+            await trackEvent("copy", selectedTone);
+        }
     } catch (error) {
         setStatus("Kunne ikke kopiere teksten.", "error");
     }
