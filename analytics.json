@@ -73,5 +73,125 @@
     "event_type": "copy",
     "button": "Venlig",
     "timestamp": "2026-04-12T08:55:08.176037Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Chef",
+    "timestamp": "2026-04-12T10:27:04.988345Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Chef",
+    "timestamp": "2026-04-12T10:27:07.951281Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Chef",
+    "timestamp": "2026-04-12T10:27:17.385758Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Venlig",
+    "timestamp": "2026-04-12T10:27:22.783441Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Venlig",
+    "timestamp": "2026-04-12T10:29:17.256740Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Professionel",
+    "timestamp": "2026-04-12T10:29:18.919388Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Professionel",
+    "timestamp": "2026-04-12T10:29:19.472845Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Professionel",
+    "timestamp": "2026-04-12T10:29:19.871544Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Afvisning",
+    "timestamp": "2026-04-12T10:29:21.643507Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Kollega",
+    "timestamp": "2026-04-12T10:29:25.957850Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Chef",
+    "timestamp": "2026-04-12T10:29:26.920614Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Chef",
+    "timestamp": "2026-04-12T10:39:25.135337Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Professionel",
+    "timestamp": "2026-04-12T10:39:47.027349Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Afvisning",
+    "timestamp": "2026-04-12T10:39:59.960622Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Rykker",
+    "timestamp": "2026-04-12T10:40:15.065503Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Rykker",
+    "timestamp": "2026-04-12T10:40:52.415630Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Rykker",
+    "timestamp": "2026-04-12T10:41:06.767203Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Afvisning",
+    "timestamp": "2026-04-12T10:41:13.755370Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Kollega",
+    "timestamp": "2026-04-12T10:41:26.905961Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Chef",
+    "timestamp": "2026-04-12T10:41:33.215915Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Venlig",
+    "timestamp": "2026-04-12T10:41:38.465920Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Kortere",
+    "timestamp": "2026-04-12T10:41:41.356756Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Professionel",
+    "timestamp": "2026-04-12T10:41:45.198764Z"
+  },
+  {
+    "event_type": "rewrite",
+    "button": "Afvisning",
+    "timestamp": "2026-04-12T10:41:48.123899Z"
   }
 ]

@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
-from services.ai_client import rewrite_text
 import os
 import json
 from datetime import datetime
@@ -8,11 +7,13 @@ from threading import Lock
 
 load_dotenv()
 
+from services.ai_client import rewrite_text
+
 app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ANALYTICS_FILE = os.path.join(BASE_DIR, "analytics.json")
-DASHBOARD_KEY = os.getenv("DASHBOARD_KEY")
+DASHBOARD_KEY = os.getenv("DASHBOARD_KEY", "").strip()
 
 analytics_lock = Lock()
 
@@ -25,6 +26,7 @@ def ensure_analytics_file():
 
 def read_analytics():
     ensure_analytics_file()
+
     with open(ANALYTICS_FILE, "r", encoding="utf-8") as f:
         try:
             data = json.load(f)
@@ -79,6 +81,9 @@ def rewrite():
 
     if not tone:
         return jsonify({"error": "Du skal vælge en stil."}), 400
+
+    if len(text) > 2000:
+        return jsonify({"error": "Beskeden er for lang. Hold dig under 2000 tegn."}), 400
 
     try:
         result = rewrite_text(text, tone)

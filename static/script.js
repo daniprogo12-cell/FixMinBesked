@@ -8,7 +8,6 @@ const loader = document.getElementById("loader");
 
 let selectedTone = "";
 
-// Sæt første aktive knap ved load
 const defaultActiveButton = document.querySelector(".tone-btn.active") || toneButtons[0];
 
 if (defaultActiveButton) {
@@ -34,19 +33,16 @@ async function trackEvent(eventType, buttonName) {
     }
 }
 
-// Klik på tone-knapper
 toneButtons.forEach((button) => {
-    button.addEventListener("click", async () => {
+    button.addEventListener("click", () => {
         toneButtons.forEach((btn) => btn.classList.remove("active"));
         button.classList.add("active");
 
         selectedTone = button.dataset.tone;
         setStatus(`Valgt stil: ${selectedTone}`, "success");
-
     });
 });
 
-// Rewrite-knap
 rewriteBtn.addEventListener("click", async () => {
     const text = messageInput.value.trim();
 
@@ -56,13 +52,20 @@ rewriteBtn.addEventListener("click", async () => {
         return;
     }
 
+    if (text.length > 2000) {
+        setStatus("Beskeden er for lang. Hold dig under 2000 tegn.", "error");
+        return;
+    }
+
     if (!selectedTone) {
         setStatus("Du skal vælge en stil.", "error");
         return;
     }
 
     setLoadingState(true);
+    setToneButtonsDisabled(true);
     loader.classList.remove("hidden");
+    outputBox.textContent = "Arbejder på din besked...";
     setStatus("Forbedrer din besked...", "");
 
     try {
@@ -86,18 +89,23 @@ rewriteBtn.addEventListener("click", async () => {
         outputBox.textContent = data.result;
         setStatus(`Beskeden er klar i stilen: ${selectedTone}`, "success");
     } catch (error) {
+        outputBox.textContent = "Her vises den forbedrede tekst...";
         setStatus(error.message || "Noget gik galt.", "error");
     } finally {
         setLoadingState(false);
+        setToneButtonsDisabled(false);
         loader.classList.add("hidden");
     }
 });
 
-// Kopiér-knap
 copyBtn.addEventListener("click", async () => {
     const text = outputBox.textContent.trim();
 
-    if (!text || text === "Her vises den forbedrede tekst...") {
+    if (
+        !text ||
+        text === "Her vises den forbedrede tekst..." ||
+        text === "Arbejder på din besked..."
+    ) {
         setStatus("Der er ikke noget at kopiere endnu.", "error");
         return;
     }
@@ -126,6 +134,14 @@ function setLoadingState(isLoading) {
         rewriteBtn.style.opacity = "1";
         rewriteBtn.style.cursor = "pointer";
     }
+}
+
+function setToneButtonsDisabled(isDisabled) {
+    toneButtons.forEach((button) => {
+        button.disabled = isDisabled;
+        button.style.opacity = isDisabled ? "0.7" : "1";
+        button.style.cursor = isDisabled ? "not-allowed" : "pointer";
+    });
 }
 
 function setStatus(message, type = "") {
