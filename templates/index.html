@@ -3,315 +3,64 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard | FixMinBesked.dk</title>
+    <title>FixMinBesked.dk</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <main class="page">
         <section class="hero">
-            <div class="hero-badge">Dashboard</div>
-            <h1>FixMinBesked analytics</h1>
-            <p>Live overblik over rewrites, kopieringer og udvikling over tid.</p>
+            <div class="hero-badge">Dansk beskedværktøj</div>
+            <h1>FixMinBesked.dk</h1>
+            <p>
+                Ret din besked på dansk – så den bliver mere venlig,
+                professionel eller mindre direkte.
+            </p>
         </section>
 
         <section class="card">
-            <div class="dashboard-top">
-                <div>
-                    <span class="label">LIVE DATA</span>
-                    <p id="lastUpdated" class="status-message">Opdaterer...</p>
+            <label for="message" class="label">DIN BESKED</label>
+            <textarea
+                id="message"
+                placeholder="Indsæt din besked her..."
+            ></textarea>
+
+            <div class="tone-section">
+                <span class="label">VÆLG STIL</span>
+
+                <div class="tone-buttons">
+                    <button type="button" class="tone-btn" data-tone="Afvisning">Afvisning uden konflikt</button>
+                    <button type="button" class="tone-btn" data-tone="Kollega">Til kollega</button>
+                    <button type="button" class="tone-btn" data-tone="Chef">Til chef</button>
+                    <button type="button" class="tone-btn" data-tone="Venlig">Gør venlig</button>
+                    <button type="button" class="tone-btn" data-tone="Kortere">Gør kortere</button>
+                    <button type="button" class="tone-btn active" data-tone="Professionel">Gør professionel</button>
+                    <button type="button" class="tone-btn" data-tone="Rykker">Send rykker</button>
                 </div>
             </div>
 
-            <div class="stats-grid" id="summaryGrid"></div>
+            <button id="rewriteBtn" class="primary-btn">Fix min besked</button>
+            <div id="loader" class="loader hidden"></div>
 
-            <div class="chart-grid">
-                <div class="chart-card">
-                    <h3>Fordeling af rewrites</h3>
-                    <div class="chart-wrapper small-chart">
-                        <canvas id="rewritePieChart"></canvas>
-                    </div>
+            <div class="output-section">
+                <div class="output-header">
+                    <span class="label">FORSLAG</span>
+                    <button id="copyBtn" class="copy-btn" type="button">Kopiér</button>
                 </div>
 
-                <div class="chart-card">
-                    <h3>Kopieringer pr. tone</h3>
-                    <div class="chart-wrapper small-chart">
-                        <canvas id="copyBarChart"></canvas>
-                    </div>
+                <div id="output" class="output-box">
+                    Her vises den forbedrede tekst...
                 </div>
             </div>
 
-            <div class="chart-card large-chart-card">
-                <h3>Rewrites over tid</h3>
-                <div class="chart-wrapper large-chart">
-                    <canvas id="rewriteLineChart"></canvas>
-                </div>
-            </div>
-
-            <div class="stats-grid" id="detailsGrid"></div>
+            <p id="statusMessage" class="status-message"></p>
         </section>
     </main>
 
-    <script>
-        let rewritePieChart = null;
-        let copyBarChart = null;
-        let rewriteLineChart = null;
-
-        function countByType(events, type) {
-            return events.filter(event => event.event_type === type).length;
-        }
-
-        function totalsByButton(events, type) {
-            const totals = {};
-
-            events
-                .filter(event => event.event_type === type)
-                .forEach((event) => {
-                    totals[event.button] = (totals[event.button] || 0) + 1;
-                });
-
-            return Object.entries(totals).sort((a, b) => b[1] - a[1]);
-        }
-
-        function filterEventsByType(events, type) {
-            return events.filter(event => event.event_type === type);
-        }
-
-        function bucketEventsByHour(events) {
-            const grouped = {};
-            const buttonNames = new Set();
-
-            events.forEach((event) => {
-                const eventDate = new Date(event.timestamp);
-
-                const key = new Date(
-                    eventDate.getFullYear(),
-                    eventDate.getMonth(),
-                    eventDate.getDate(),
-                    eventDate.getHours(),
-                    0,
-                    0,
-                    0
-                ).toISOString();
-
-                if (!grouped[key]) {
-                    grouped[key] = {};
-                }
-
-                if (!grouped[key][event.button]) {
-                    grouped[key][event.button] = 0;
-                }
-
-                grouped[key][event.button] += 1;
-                buttonNames.add(event.button);
-            });
-
-            const sortedKeys = Object.keys(grouped).sort();
-
-            const labels = sortedKeys.map((key) =>
-                new Date(key).toLocaleString("da-DK", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    hour: "2-digit"
-                })
-            );
-
-            const datasets = Array.from(buttonNames).map((buttonName) => {
-                const data = sortedKeys.map((key) => grouped[key][buttonName] || 0);
-
-                return {
-                    label: buttonName,
-                    data,
-                    tension: 0.25
-                };
-            });
-
-            return { labels, datasets };
-        }
-
-        function renderSummary(events) {
-            const summaryGrid = document.getElementById("summaryGrid");
-
-            const rewrites = countByType(events, "rewrite");
-            const copies = countByType(events, "copy");
-            const copyRate = rewrites > 0 ? Math.round((copies / rewrites) * 100) : 0;
-
-            summaryGrid.innerHTML = `
-                <div class="stat-card">
-                    <strong>Brugte rewrites</strong>
-                    <p>${rewrites}</p>
-                </div>
-                <div class="stat-card">
-                    <strong>Kopieringer</strong>
-                    <p>${copies}</p>
-                </div>
-                <div class="stat-card">
-                    <strong>Kopieringsrate</strong>
-                    <p>${copyRate}%</p>
-                </div>
-            `;
-        }
-
-        function renderDetails(events) {
-            const detailsGrid = document.getElementById("detailsGrid");
-
-            const rewriteEntries = totalsByButton(events, "rewrite");
-            const copyEntries = totalsByButton(events, "copy");
-
-            detailsGrid.innerHTML = `
-                <div class="stat-card">
-                    <strong>Mest brugte toner</strong>
-                    ${rewriteEntries.length
-                        ? rewriteEntries.map(([name, count]) => `<p>${name}: ${count}</p>`).join("")
-                        : "<p>Ingen data endnu</p>"
-                    }
-                </div>
-                <div class="stat-card">
-                    <strong>Mest kopierede toner</strong>
-                    ${copyEntries.length
-                        ? copyEntries.map(([name, count]) => `<p>${name}: ${count}</p>`).join("")
-                        : "<p>Ingen data endnu</p>"
-                    }
-                </div>
-            `;
-        }
-
-        function destroyCharts() {
-            if (rewritePieChart) rewritePieChart.destroy();
-            if (copyBarChart) copyBarChart.destroy();
-            if (rewriteLineChart) rewriteLineChart.destroy();
-        }
-
-        function renderPieChart(events) {
-            const rewriteEntries = totalsByButton(events, "rewrite");
-            const ctx = document.getElementById("rewritePieChart").getContext("2d");
-
-            rewritePieChart = new Chart(ctx, {
-                type: "pie",
-                data: {
-                    labels: rewriteEntries.map(([name]) => name),
-                    datasets: [
-                        {
-                            data: rewriteEntries.map(([, count]) => count)
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: "bottom"
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderBarChart(events) {
-            const copyEntries = totalsByButton(events, "copy");
-            const ctx = document.getElementById("copyBarChart").getContext("2d");
-
-            copyBarChart = new Chart(ctx, {
-                type: "bar",
-                data: {
-                    labels: copyEntries.map(([name]) => name),
-                    datasets: [
-                        {
-                            label: "Kopieringer",
-                            data: copyEntries.map(([, count]) => count)
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                precision: 0
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderLineChart(events) {
-            const rewriteEvents = filterEventsByType(events, "rewrite");
-            const { labels, datasets } = bucketEventsByHour(rewriteEvents);
-            const ctx = document.getElementById("rewriteLineChart").getContext("2d");
-
-            rewriteLineChart = new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels,
-                    datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: "index",
-                        intersect: false
-                    },
-                    plugins: {
-                        legend: {
-                            position: "top"
-                        }
-                    },
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: "Tid"
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                precision: 0
-                            },
-                            title: {
-                                display: true,
-                                text: "Rewrites pr. time"
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        async function loadDashboardData() {
-            try {
-                const response = await fetch("/dashboard-data");
-                const data = await response.json();
-                const events = data.events || [];
-
-                renderSummary(events);
-                renderDetails(events);
-
-                destroyCharts();
-
-                renderPieChart(events);
-                renderBarChart(events);
-                renderLineChart(events);
-
-                document.getElementById("lastUpdated").textContent =
-                    "Sidst opdateret: " + new Date().toLocaleTimeString("da-DK");
-            } catch (error) {
-                console.error("Kunne ikke hente dashboard-data:", error);
-            }
-        }
-
-        loadDashboardData();
-        setInterval(loadDashboardData, 5000);
-    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

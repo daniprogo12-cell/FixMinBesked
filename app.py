@@ -58,6 +58,8 @@ def index():
 
 @app.route("/dashboard")
 def dashboard():
+    if request.args.get("key") != "hemmelig123":
+        return "Unauthorized", 403
     return render_template("dashboard.html")
 
 
