@@ -1,0 +1,13 @@
+Source style:  dim
+Target style:  corporate
+Replacements:  20
+Meaning:       32%
+Style match:   48%
+
+--- SOURCE EXCERPT ---
+
+Altså jeg fik det der job ting, og så skulle jeg flytte til den by. Aarhus hedder den vist. Det var lidt mærkeligt for jeg havde aldrig prøvet at bo et andet sted end hjemme hos mor. Men det skulle nok gå tænkte jeg, det gør det jo altid. Lejligheden var ikke så stor men den havde et vindue hvor man kunne se ud og det var jo fint nok. Folk på jobbet var rigtig rare, der var en der hed Mikkel tror jeg, han var sød og hjalp mig med tingene. Vi spiste mad sammen i den der kantine
+
+--- STYLED OUTPUT ---
+
+så jeg lavede det der nye testamente , og så skulle jeg flytte til den by . Aarhus hedder den by . Det var lidt sjovt for jeg havde aldrig prøvet at bo et andet sted end her hos mig . Men det skulle nok gå ser jeg , det gør det jo altid . byen var ikke så stor men den havde et vindue hvor man kunne se ud og det var jo fint nok . medarbejderne på byen var meget glade , der var en der hed Mikkel ser jeg , han var glad og hjalp mig med det . Vi samlede os sammen i den der by

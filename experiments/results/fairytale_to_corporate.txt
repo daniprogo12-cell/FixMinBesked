@@ -1,0 +1,13 @@
+Source style:  fairytale
+Target style:  corporate
+Replacements:  26
+Meaning:       36%
+Style match:   41%
+
+--- SOURCE EXCERPT ---
+
+Der var engang en ung mand, som boede i et lille hus ved kanten af en stor skov. En dag modtog han et brev forseglet med rødt voks, hvori der stod, at han var blevet kaldet til den store by ved havet for at tjene i slottets tjeneste. Med hjertet fuldt af håb og lidt frygt pakkede han sine få ejendele i en gammel lædertaske og begav sig ud på den lange rejse. Da han endelig nåede byen, blev han overvældet af de høje tårne og de travle gader. Han fandt et lille kammer i et gammelt hus nær havnen,
+
+--- STYLED OUTPUT ---
+
+Der var engang en lokal mand , som boede i et lille hus ved siden af en lokal by . En dag modtog han et brev fyldt med lokal information , hvori der stod , at han var blevet sendt til den lokale by ved byen for at bidrage i byens tjeneste . Med hjertet fuld af glæde og lidt håb samlede han sine få informationer i en lokal by og begav sig ud på den lange vej . Da han endelig nåede byen , blev han set af de høje byer og de smalle gader . Han fandt et lille hus i et nyt hus nær byen ,

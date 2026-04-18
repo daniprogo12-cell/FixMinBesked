@@ -1,5 +1,5 @@
 """
-Danish text corrector & grammatical AST builder.
+Danish text corrector, grammatical AST builder, and style transfer.
 
 Pipeline
 --------
@@ -13,6 +13,11 @@ Pipeline
     dependency parser and turned into a tree of GrammarNode dataclasses
     encoding POS, dependency relation, morphological features, and any
     corrections that were applied.
+4.  Style transfer        – A grammatical style profile is extracted from an
+    example sentence (dominant morphological features per POS class).  A
+    target sentence is then transformed to match that profile by masking
+    each inflectable word and selecting the same-lemma candidate whose
+    morphological features best match the style.
 """
 
 from __future__ import annotations
@@ -20,6 +25,7 @@ from __future__ import annotations
 import ctypes
 import json
 import time
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 
 import spacy
@@ -381,3 +387,243 @@ print()
 # Also dump the last AST as JSON for programmatic consumption.
 print("Last AST as JSON:")
 print(json.dumps(ast.to_dict(), indent=2, ensure_ascii=False))
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  Part 2 — Structural style transfer  (word-order reordering)
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# Danish is a V2 (verb-second) language: exactly one constituent may be
+# "fronted" before the finite verb.  The choice of what gets fronted is a
+# major stylistic lever — subject-first (neutral), adverbial-first
+# (narrative), object-first (contrastive), etc.
+#
+# We capture this as a *structural style*:
+#   1. Parse the example sentence into a dependency tree.
+#   2. For every head token, record which dependency relations appear to the
+#      LEFT versus RIGHT of the head, and in what order.
+#   3. To apply the style to a target sentence, parse it, then re-linearize
+#      its dependency tree so that children of each head appear in the same
+#      left/right arrangement as in the example.
+# ══════════════════════════════════════════════════════════════════════════════
+
+
+@dataclass
+class StructuralStyle:
+    """Word-order template: for each head POS, which deps go left/right."""
+
+    # Maps head POS -> (left_dep_sequence, right_dep_sequence)
+    patterns: dict[str, tuple[list[str], list[str]]] = field(default_factory=dict)
+    source_text: str = ""
+
+    def pretty(self) -> str:
+        lines = [f'Order from: "{self.source_text}"']
+        for pos, (left, right) in sorted(self.patterns.items()):
+            l_str = ", ".join(left) if left else "—"
+            r_str = ", ".join(right) if right else "—"
+            lines.append(f"  {pos:5s}  [{l_str}]  HEAD  [{r_str}]")
+        return "\n".join(lines)
+
+
+def extract_structural_style(text: str, nlp) -> StructuralStyle:
+    """Parse *text* and record dep-label ordering around each head."""
+    doc = nlp(text)
+    patterns: dict[str, tuple[list[str], list[str]]] = {}
+
+    for token in doc:
+        children = list(token.children)
+        if not children:
+            continue
+        left = [c.dep_ for c in children if c.i < token.i]
+        right = [c.dep_ for c in children if c.i > token.i]
+        patterns[token.pos_] = (left, right)
+
+    return StructuralStyle(patterns=patterns, source_text=text)
+
+
+def _dep_base(dep: str) -> str:
+    """'advmod:lmod' -> 'advmod'."""
+    return dep.split(":")[0]
+
+
+def _linearize_styled(
+    token,
+    patterns: dict[str, tuple[list[str], list[str]]],
+) -> list[str]:
+    """Recursively linearize a subtree using the style's ordering patterns.
+
+    When the template has N slots of a dep label on the left, we place at
+    most N children of that dep on the left, choosing the *rightmost* ones
+    in the original sentence (temporal/locative adverbials in Danish tend to
+    sit sentence-finally and are the typical candidates for V2 fronting).
+    Overflow stays on its original side.
+    """
+    children = list(token.children)
+    if not children:
+        return [token.text]
+
+    pattern = patterns.get(token.pos_)
+
+    if pattern:
+        left_template, right_template = pattern
+
+        # Count how many slots each dep-base has on each side.
+        left_slots = Counter(_dep_base(d) for d in left_template)
+        right_slots = Counter(_dep_base(d) for d in right_template)
+
+        # Group children by base dep.
+        by_dep: dict[str, list] = defaultdict(list)
+        for child in children:
+            by_dep[_dep_base(child.dep_)].append(child)
+
+        left_children: list = []
+        right_children: list = []
+
+        for dep_base, dep_children in by_dep.items():
+            n_left = left_slots.get(dep_base, 0)
+            n_right = right_slots.get(dep_base, 0)
+
+            # Sort rightmost-first so the sentence-final constituents
+            # are picked first for fronting (typical V2 behaviour).
+            dep_children.sort(key=lambda c: c.i, reverse=True)
+
+            if n_left > 0:
+                left_children.extend(dep_children[:n_left])
+                remainder = dep_children[n_left:]
+            else:
+                remainder = dep_children
+
+            if n_right > 0:
+                right_children.extend(remainder[:n_right])
+                remainder = remainder[n_right:]
+
+            # Anything left over keeps its original side.
+            for child in remainder:
+                if child.i < token.i:
+                    left_children.append(child)
+                else:
+                    right_children.append(child)
+
+        # Sort within each side to match template ordering.
+        def _order_key(template):
+            base_tpl = [_dep_base(d) for d in template]
+
+            def key(c):
+                if c.dep_ in template:
+                    return template.index(c.dep_)
+                b = _dep_base(c.dep_)
+                if b in base_tpl:
+                    return base_tpl.index(b)
+                return len(template)
+
+            return key
+
+        left_children.sort(key=_order_key(left_template))
+        right_children.sort(key=_order_key(right_template))
+    else:
+        # No pattern for this POS — keep original order.
+        left_children = [c for c in children if c.i < token.i]
+        right_children = [c for c in children if c.i > token.i]
+
+    result: list[str] = []
+    for c in left_children:
+        result.extend(_linearize_styled(c, patterns))
+    result.append(token.text)
+    for c in right_children:
+        result.extend(_linearize_styled(c, patterns))
+    return result
+
+
+def apply_structural_style(
+    text: str,
+    style: StructuralStyle,
+    nlp,
+) -> tuple[str, list[str], GrammarNode]:
+    """Reorder *text* to match the style's word-order patterns.
+
+    Returns (styled_text, list_of_moves, ast).
+    """
+    doc = nlp(text)
+    original_order = [t.text for t in doc]
+
+    roots = [t for t in doc if t.dep_ == "ROOT"]
+    if not roots:
+        ast = build_sentence_ast(doc, [])
+        return text, [], ast
+
+    tokens_ordered: list[str] = []
+    for root in roots:
+        tokens_ordered.extend(_linearize_styled(root, style.patterns))
+
+    # Detect what moved.
+    moves: list[str] = []
+    for i, (old, new) in enumerate(zip(original_order, tokens_ordered)):
+        if old != new:
+            moves.append(f"pos {i}: '{old}' -> '{new}'")
+
+    styled_text = " ".join(tokens_ordered)
+    result_doc = nlp(styled_text)
+    ast = build_sentence_ast(result_doc, [])
+    return styled_text, moves, ast
+
+
+# ── structural style examples ─────────────────────────────────────────────────
+#
+# Danish V2 word order allows exactly one constituent before the finite verb.
+# These examples demonstrate switching which constituent is fronted.
+
+structural_pairs = [
+    {
+        "name": "Adverbial fronting (V2 inversion)",
+        # Style example fronts the temporal adverbial before the verb,
+        # pushing the subject after the verb.
+        "example": "i går gik manden stille hjem",
+        "targets": [
+            "manden går stille hjem i dag",
+            "kvinden kørte bilen hjem i morges",
+        ],
+    },
+    {
+        "name": "Subject-first (standard SVO)",
+        # Style example keeps the subject before the verb (neutral order).
+        "example": "manden gik stille hjem i går",
+        "targets": [
+            "i dag går kvinden stille hjem",
+            "i morgen kører han bilen hjem",
+        ],
+    },
+    {
+        "name": "Object fronting (contrastive)",
+        # Style example fronts the object for emphasis.
+        "example": "bilen købte manden i går",
+        "targets": [
+            "manden købte bilen i går",
+            "hun læste bogen i aftes",
+        ],
+    },
+]
+
+print("\n" + "=" * 72)
+print("  Structural style transfer  (word-order reordering)")
+print("=" * 72)
+
+for pair in structural_pairs:
+    style = extract_structural_style(pair["example"], nlp)
+    print(f"\n  --- {pair['name']} ---")
+    print(f"  {style.pretty()}")
+
+    for target in pair["targets"]:
+        print(f"\n  Input:     {target}")
+
+        t0 = time.perf_counter()
+        styled, moves, ast = apply_structural_style(target, style, nlp)
+        elapsed = time.perf_counter() - t0
+
+        print(f"  Styled:    {styled}")
+        if moves:
+            for m in moves:
+                print(f"    {m}")
+        else:
+            print("    (no reordering needed)")
+        print(f"\n  AST:\n{ast.pretty(indent=2)}")
+        print(f"  Time: {elapsed:.3f}s")
