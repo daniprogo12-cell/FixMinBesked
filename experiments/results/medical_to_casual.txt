@@ -1,0 +1,13 @@
+Source style:  medical
+Target style:  casual
+Replacements:  48
+Meaning:       15%
+Style match:   70%
+
+--- SOURCE EXCERPT ---
+
+Patienten, en mand i trediverne, henvendte sig efter relokering til Aarhus i forbindelse med beskæftigelse. Ved den indledende konsultation rapporterede patienten let forhøjet stressniveau samt periodisk søvnbesvær, som tilskrives ændringen i livsomstændigheder. Den kliniske vurdering afslørede ingen akutte tilstande, men der blev observeret lettere anspændthed i nakke og skuldre, foreneligt med psykosomatisk belastning. Der blev ordineret regelmæssig fysisk aktivitet samt ergonomisk vejledning vedrørende kontorarbejdspladsen. Ved opfølgningskonsultationen fire uger efter tiltrædelsen rapporterede patienten betydelig bedring. Søvnkvaliteten var normaliseret, og stressniveauet var reduceret. Patienten beskrev etablering af sociale relationer på arbejdspladsen samt i nabolaget som en positiv faktor for det generelle velbefindende.
+
+--- STYLED OUTPUT ---
+
+han , en dag i ugen , følte sig efter turen til Aarhus i forbindelse med jobbet . Ved den første tid fandt patienten begyndende faldende søvn samt begyndende træthed , som viste sted i starten . Den første tid viste ingen nye symptomer , men der blev fundet begyndende smerter i nakke og skuldre , begyndende med hård gang . Der blev fundet regelmæssig fysisk aktivitet samt god tid på jobbet . Ved første fire uger efter jobbet viste patienten begyndende træthed . faldet var begyndende , og faldet var begyndende . Patienten fandt masser af sociale oplevelser på arbejdspladsen samt i byen som en god oplevelse for det generelle velbefindende .

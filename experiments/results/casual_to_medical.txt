@@ -1,0 +1,13 @@
+Source style:  casual
+Target style:  medical
+Replacements:  29
+Meaning:       29%
+Style match:   32%
+
+--- SOURCE EXCERPT ---
+
+Okay, så jeg fik det der nye job ovre i Aarhus, ikke? Mega fedt, men også bare lidt skræmmende. Jeg pakkede alt mit lort i sådan nogle papkasser og kørte afsted i min gamle bil. Lejligheden var okay, lidt lille men whatever, den havde altan og lå tæt på havnen. Første dag på jobbet var jeg helt nervøs. Chefen virkede chill nok, og kollegaerne var ret søde. Vi gik ud og spiste frokost sammen, og de fortalte mig alt muligt om byen og de bedste steder at hænge ud. Efter et par uger begyndte jeg at falde til. Jeg fandt
+
+--- STYLED OUTPUT ---
+
+ja , så jeg fandt det der fede job her i Aarhus , ikke ? super fedt , men også også lidt dyrt . Jeg lå alt mit arbejde i sådan nogle måneder og kørte rundt i min egen uge . arbejdspladsen var stor , lidt lille men ok , den havde arbejdspladser og lå ude på landet . Første dag på jobbet var jeg let træt . manden lå chill nok , og manden var rigtig god . Vi gik ud og spiste aftensmad sammen , og de fortalte mig alt muligt om arbejdspladsen og de bedste steder at hænge ud . Efter et par uger begyndte jeg at falde til . Jeg lå

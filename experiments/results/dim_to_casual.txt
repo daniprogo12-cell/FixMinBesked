@@ -1,0 +1,13 @@
+Source style:  dim
+Target style:  casual
+Replacements:  13
+Meaning:       45%
+Style match:   76%
+
+--- SOURCE EXCERPT ---
+
+Altså jeg fik det der job ting, og så skulle jeg flytte til den by. Aarhus hedder den vist. Det var lidt mærkeligt for jeg havde aldrig prøvet at bo et andet sted end hjemme hos mor. Men det skulle nok gå tænkte jeg, det gør det jo altid. Lejligheden var ikke så stor men den havde et vindue hvor man kunne se ud og det var jo fint nok. Folk på jobbet var rigtig rare, der var en der hed Mikkel tror jeg, han var sød og hjalp mig med tingene. Vi spiste mad sammen i den der kantine
+
+--- STYLED OUTPUT ---
+
+okay jeg fik det der job ting , og så skulle jeg flytte til den by . Aarhus hedder den bare . Det var lidt underligt for jeg havde aldrig prøvet at bo et andet sted end nede hos chefen . Men det skulle nok gå følte jeg , det gør det jo altid . Lejligheden var ikke så stor men den havde et vindue hvor man kunne gå ud og det var jo fint nok . chefen på jobbet var ret sød , der var en der hed Mikkel følte jeg , han var sød og hjalp mig med tingene . Vi spiste frokost sammen i den der lejlighed

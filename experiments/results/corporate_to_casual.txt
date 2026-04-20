@@ -1,0 +1,13 @@
+Source style:  corporate
+Target style:  casual
+Replacements:  35
+Meaning:       26%
+Style match:   54%
+
+--- SOURCE EXCERPT ---
+
+Vi er glade for at kunne meddele, at virksomheden har gennemført en vellykket rekrutteringsproces, der har resulteret i ansættelsen af en ny medarbejder ved vores afdeling i Aarhus. Den pågældende medarbejder er blevet tildelt en stilling inden for strategisk udvikling og forventes at bidrage væsentligt til afdelingens samlede kompetenceprofil. I forbindelse med tiltrædelsen blev der etableret passende kontorfaciliteter samt en introduktionsplan, der sikrer en struktureret onboarding. De første arbejdsuger forløb tilfredsstillende, og medarbejderen har demonstreret en konstruktiv tilgang til samarbejdet med det eksisterende team. Der blev afholdt velkomstmøder og frokostmøder med henblik på at fremme integration i organisationskulturen. Ledelsen vurderer,
+
+--- STYLED OUTPUT ---
+
+Vi er glade for at kunne fortælle , at vi har startet en vellykket start , der har resulteret i ansættelse af en ny medarbejder ved vores afdeling i Aarhus . Den nye medarbejder er blevet tilbudt en tid inden for byens erhvervsliv og forventes at bidrage positivt til byens nye job . I forbindelse med start blev der etableret nye arbejdsgange samt en struktur , der viser en god integration . De første dage forløb spændende , og brugerne har fået en ny tilgang til samarbejdet med det nye job . Der blev afholdt kaffe og frokost med henblik på at vise nyt i byen . brugerne fortalte ,
